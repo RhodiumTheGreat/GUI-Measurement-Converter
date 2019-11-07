@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<conversions title="Speed">
-    <conversion id="1">
+<conversions>
+    <conversion>
         <title>M/S</title>
         <multiplier>1</multiplier>
     </conversion>
-    <conversion id="2">
+    <conversion>
         <title>KM/S</title>
         <multiplier>1000</multiplier>
     </conversion>
-    <conversion id="3">
+    <conversion>
         <title>MPH</title>
         <multiplier>2.23694</multiplier>
     </conversion>
-    <conversion id="4">
+    <conversion>
         <title>KM/H</title>
         <multiplier>3.6</multiplier>
     </conversion>
-    <conversion id="5">
+    <conversion>
+        <title>FT/S</title>
+        <multiplier>3.28084</multiplier>
+    </conversion>
+    <conversion>
         <title>Knot</title>
         <multiplier>1.94384</multiplier>
     </conversion>
