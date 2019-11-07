@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversions title="Speed">
+    <conversion id="1">
+        <title>M/S</title>
+        <multiplier>1</multiplier>
+    </conversion>
+    <conversion id="2">
+        <title>KM/S</title>
+        <multiplier>1000</multiplier>
+    </conversion>
+    <conversion id="3">
+        <title>MPH</title>
+        <multiplier>2.23694</multiplier>
+    </conversion>
+    <conversion id="4">
+        <title>KM/H</title>
+        <multiplier>3.6</multiplier>
+    </conversion>
+</conversions>
