@@ -16,4 +16,8 @@
         <title>KM/H</title>
         <multiplier>3.6</multiplier>
     </conversion>
+    <conversion id="5">
+        <title>Knot</title>
+        <multiplier>1.94384</multiplier>
+    </conversion>
 </conversions>
