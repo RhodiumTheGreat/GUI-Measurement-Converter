@@ -10,7 +10,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("mainwindow.fxml"));
         stage.setTitle("Measurement Converter");
-        stage.setScene(new Scene(root, 900, 500));
+        stage.setScene(new Scene(root));
         stage.show();
     }
 
