@@ -52,9 +52,10 @@ public class ConversionManager {
                 System.out.println("Reader created");
                 Conversion conversion = null;
 
-                // Save as a 'Conversion' object
+                // Create the list of Conversion objects
 
                 XMLEvent event = eventReader.nextEvent();
+                event = eventReader.nextEvent();
 
                 //Checks the start of 'conversions'
                 if (event.isStartElement()) {
@@ -62,11 +63,11 @@ public class ConversionManager {
                     // If the start element is 'conversions', then we continue reading each conversion
                     if (event.asStartElement().getName().getLocalPart().equals("conversions")) {
                         System.out.println("Has conversions");
-                        continue;
                     }
                     // While the end element on 'conversions' isn't met
                     while (eventReader.hasNext()) {
                         // If the element is the start of a conversion, then we create a conversion file
+                        event = eventReader.nextEvent();
                         if (event.isStartElement()) {
                             if (event.asStartElement().getName().getLocalPart().equals("conversion")) {
                                 event = eventReader.nextEvent();
@@ -77,7 +78,6 @@ public class ConversionManager {
 
                             if (event.isStartElement()) {
                                 if (event.asStartElement().getName().getLocalPart().equals("title")) {
-                                    event = eventReader.nextEvent();
                                     conversion.setName(eventReader.nextEvent().asCharacters().getData());
                                     System.out.println(conversion.getName());
                                     continue;
@@ -86,9 +86,9 @@ public class ConversionManager {
 
                             if (event.isStartElement()) {
                                 if (event.asStartElement().getName().getLocalPart().equals("multiplier")) {
-                                    event = eventReader.nextEvent();
                                     conversion.setMultiplier(Double.parseDouble(eventReader.nextEvent().asCharacters().getData()));
                                     System.out.println(conversion.getMultiplier());
+                                    continue;
                                 }
                             }
                         }
@@ -97,11 +97,14 @@ public class ConversionManager {
                             EndElement endElement = event.asEndElement();
                             if (endElement.getName().getLocalPart().equals("conversion")) {
                                 conversions.add(conversion);
+                                System.out.println("Conversion object is saved");
                             }
                         }
                     }
                 }
 
+                // Closes the event reader
+                eventReader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XMLStreamException e) {
@@ -112,5 +115,13 @@ public class ConversionManager {
 
     public void initialise() throws FileNotFoundException {
         loadConversions(readConversions());
+
+        for(Conversion i : conversions){
+            System.out.println(i.getType() +" " + i.getName() + " " + i.getMultiplier());
+        }
+    }
+
+    public ArrayList<Conversion> getConversions(){
+        return conversions;
     }
 }
