@@ -105,9 +105,13 @@ public class ConversionManager {
 
                 // Closes the event reader
                 eventReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XMLStreamException e) {
+                System.out.println("Reader closed");
+
+                // Closes the file
+                in.close();
+                System.out.println("File closed");
+
+            } catch (IOException | XMLStreamException e) {
                 e.printStackTrace();
             }
         }
