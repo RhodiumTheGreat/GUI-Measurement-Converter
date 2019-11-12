@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.shape.SVGPath;
 import javafx.util.StringConverter;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -98,6 +100,7 @@ public class MainWindowController {
                 System.out.println("Selected Conversion Value: " + newValue.getName());
                 conversionLeftText.setDisable(false);
                 conversionLeftText.setPromptText("Type your conversion");
+                onRightTyped();
             }
         });
 
@@ -125,6 +128,7 @@ public class MainWindowController {
                 System.out.println("Selected Conversion Value: " + newValue.getName());
                 conversionRightText.setDisable(false);
                 conversionRightText.setPromptText("Type your conversion");
+                onLeftTyped();
             }
         });
 
@@ -152,4 +156,39 @@ public class MainWindowController {
         conversions.addAll(type.getConversions());
         return conversions;
     }
+
+    @FXML
+    protected void onLeftTyped(){
+        try{
+            Double number = Double.parseDouble(conversionLeftText.getText());
+
+            number /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+            number *= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
+
+            conversionRightText.setText(number.toString());
+
+
+        } catch (NumberFormatException e) {
+            conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
+            conversionLeftText.positionCaret(conversionLeftText.getText().length());
+        }
+    }
+
+    @FXML
+    protected void onRightTyped(){
+        try{
+            Double number = Double.parseDouble(conversionRightText.getText());
+
+            number /= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
+            number *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+
+            conversionLeftText.setText(number.toString());
+
+
+        } catch (NumberFormatException e) {
+            conversionRightText.setText(conversionRightText.getText().substring(0, conversionRightText.getText().length()-1));
+            conversionRightText.positionCaret(conversionRightText.getText().length());
+        }
+    }
+
 }
