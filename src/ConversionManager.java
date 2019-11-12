@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConversionManager {
-    private ArrayList<Conversion> conversions = new ArrayList<>();
+    private ArrayList<Type> types = new ArrayList<>();
 
     public ConversionManager(){
     }
@@ -37,11 +37,11 @@ public class ConversionManager {
     }
 
     private void loadConversions(List result) throws FileNotFoundException {
-        String type;
+        String typeName;
         for (Object i : result) {
             File f = new File(i.toString().replace("]", "").replace("[",""));
-            type = f.getName().replace(".xml", "").replace("_", " ");
-            System.out.println(type);
+            typeName = f.getName().replace(".xml", "").replace("_", " ");
+            System.out.println(typeName);
             try {
                 // First, create a new XMLInputFactory
                 XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -50,11 +50,13 @@ public class ConversionManager {
                 System.out.println("File loaded");
                 XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
                 System.out.println("Reader created");
+                Type type = null;
                 Conversion conversion = null;
 
-                // Save as a 'Conversion' object
+                // Create the list of Conversion objects
 
                 XMLEvent event = eventReader.nextEvent();
+                event = eventReader.nextEvent();
 
                 //Checks the start of 'conversions'
                 if (event.isStartElement()) {
@@ -62,14 +64,15 @@ public class ConversionManager {
                     // If the start element is 'conversions', then we continue reading each conversion
                     if (event.asStartElement().getName().getLocalPart().equals("conversions")) {
                         System.out.println("Has conversions");
-                        continue;
                     }
                     // While the end element on 'conversions' isn't met
                     while (eventReader.hasNext()) {
                         // If the element is the start of a conversion, then we create a conversion file
+                        event = eventReader.nextEvent();
                         if (event.isStartElement()) {
                             if (event.asStartElement().getName().getLocalPart().equals("conversion")) {
                                 event = eventReader.nextEvent();
+                                type = new Type(typeName);
                                 conversion = new Conversion(type);
                                 System.out.println("Conversion object is created");
                                 continue;
@@ -77,7 +80,6 @@ public class ConversionManager {
 
                             if (event.isStartElement()) {
                                 if (event.asStartElement().getName().getLocalPart().equals("title")) {
-                                    event = eventReader.nextEvent();
                                     conversion.setName(eventReader.nextEvent().asCharacters().getData());
                                     System.out.println(conversion.getName());
                                     continue;
@@ -86,9 +88,9 @@ public class ConversionManager {
 
                             if (event.isStartElement()) {
                                 if (event.asStartElement().getName().getLocalPart().equals("multiplier")) {
-                                    event = eventReader.nextEvent();
                                     conversion.setMultiplier(Double.parseDouble(eventReader.nextEvent().asCharacters().getData()));
                                     System.out.println(conversion.getMultiplier());
+                                    continue;
                                 }
                             }
                         }
@@ -96,15 +98,23 @@ public class ConversionManager {
                         if (event.isEndElement()) {
                             EndElement endElement = event.asEndElement();
                             if (endElement.getName().getLocalPart().equals("conversion")) {
-                                conversions.add(conversion);
+                                type.addConversion(conversion);
+                                types.add(type);
+                                System.out.println("Conversion object is saved");
                             }
                         }
                     }
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XMLStreamException e) {
+                // Closes the event reader
+                eventReader.close();
+                System.out.println("Reader closed");
+
+                // Closes the file
+                in.close();
+                System.out.println("File closed");
+
+            } catch (IOException | XMLStreamException e) {
                 e.printStackTrace();
             }
         }
@@ -112,5 +122,15 @@ public class ConversionManager {
 
     public void initialise() throws FileNotFoundException {
         loadConversions(readConversions());
+
+        for(Type x: types) {
+            for (Conversion y : x.getConversions()) {
+                System.out.println(y.getType().getType() + " " + y.getName() + " " + y.getMultiplier());
+            }
+        }
+    }
+
+    public ArrayList<Type> getTypes(){
+        return types;
     }
 }

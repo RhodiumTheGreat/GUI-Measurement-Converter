@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversions>
+    <conversion>
+        <title>M</title>
+        <multiplier>1</multiplier>
+    </conversion>
+    <conversion>
+        <title>CM</title>
+        <multiplier>0.01</multiplier>
+    </conversion>
+    <conversion>
+        <title>MM</title>
+        <multiplier>0.001</multiplier>
+    </conversion>
+</conversions>

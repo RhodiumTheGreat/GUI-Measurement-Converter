@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private ConversionManager conversionManager;
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -17,8 +17,7 @@ public class Main extends Application {
     }
 
     public void init() throws Exception {
-        conversionManager = new ConversionManager();
-        conversionManager.initialise();
+
     }
 
     public static void main(String[] args) {
