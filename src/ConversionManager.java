@@ -1,3 +1,7 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -14,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConversionManager {
-    private ArrayList<Type> types = new ArrayList<>();
+    private ObservableList<Type> types = FXCollections.observableArrayList();
 
     public ConversionManager(){
     }
@@ -42,6 +46,7 @@ public class ConversionManager {
             File f = new File(i.toString().replace("]", "").replace("[",""));
             typeName = f.getName().replace(".xml", "").replace("_", " ");
             System.out.println(typeName);
+            Type type = new Type(typeName);
             try {
                 // First, create a new XMLInputFactory
                 XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -50,7 +55,6 @@ public class ConversionManager {
                 System.out.println("File loaded");
                 XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
                 System.out.println("Reader created");
-                Type type = null;
                 Conversion conversion = null;
 
                 // Create the list of Conversion objects
@@ -72,7 +76,6 @@ public class ConversionManager {
                         if (event.isStartElement()) {
                             if (event.asStartElement().getName().getLocalPart().equals("conversion")) {
                                 event = eventReader.nextEvent();
-                                type = new Type(typeName);
                                 conversion = new Conversion(type);
                                 System.out.println("Conversion object is created");
                                 continue;
@@ -99,7 +102,6 @@ public class ConversionManager {
                             EndElement endElement = event.asEndElement();
                             if (endElement.getName().getLocalPart().equals("conversion")) {
                                 type.addConversion(conversion);
-                                types.add(type);
                                 System.out.println("Conversion object is saved");
                             }
                         }
@@ -113,6 +115,7 @@ public class ConversionManager {
                 // Closes the file
                 in.close();
                 System.out.println("File closed");
+                types.add(type);
 
             } catch (IOException | XMLStreamException e) {
                 e.printStackTrace();
@@ -130,7 +133,7 @@ public class ConversionManager {
         }
     }
 
-    public ArrayList<Type> getTypes(){
-        return types;
+    public ObservableList<Type> getTypes(){
+        return this.types;
     }
 }
