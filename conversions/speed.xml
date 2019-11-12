@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <conversions>
     <conversion>
-        <title>M/S</title>
+        <title>Metres Per Second</title>
         <multiplier>1</multiplier>
     </conversion>
     <conversion>
-        <title>KM/S</title>
+        <title>Kilometres Per Second</title>
         <multiplier>1000</multiplier>
     </conversion>
     <conversion>
-        <title>MPH</title>
-        <multiplier>2.23694</multiplier>
-    </conversion>
-    <conversion>
-        <title>KM/H</title>
+        <title>Kilometres Per Hour</title>
         <multiplier>3.6</multiplier>
     </conversion>
     <conversion>
-        <title>FT/S</title>
+        <title>Miles Per Hour</title>
+        <multiplier>2.23694</multiplier>
+    </conversion>
+    <conversion>
+        <title>Feet Per Second</title>
         <multiplier>3.28084</multiplier>
     </conversion>
     <conversion>

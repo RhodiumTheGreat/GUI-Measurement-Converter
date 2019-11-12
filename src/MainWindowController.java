@@ -1,3 +1,4 @@
+import javafx.animation.FillTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -5,13 +6,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.paint.Color.GRAY;
 
 public class MainWindowController {
 
@@ -160,13 +166,19 @@ public class MainWindowController {
     @FXML
     protected void onLeftTyped(){
         try{
-            Double number = Double.parseDouble(conversionLeftText.getText());
+            if (!conversionLeftText.getText().equals("")) {
+                Double number = Double.parseDouble(conversionLeftText.getText());
 
-            number /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
-            number *= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                number /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                number *= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
 
-            conversionRightText.setText(number.toString());
+                conversionRightText.setText(number.toString());
+            }
 
+            else {
+                conversionRightText.setText("");
+            }
+            flashConversionArrow();
 
         } catch (NumberFormatException e) {
             conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
@@ -177,13 +189,19 @@ public class MainWindowController {
     @FXML
     protected void onRightTyped(){
         try{
-            Double number = Double.parseDouble(conversionRightText.getText());
+            if (!conversionRightText.getText().equals("")) {
+                Double number = Double.parseDouble(conversionRightText.getText());
 
-            number /= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
-            number *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                number /= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                number *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
 
-            conversionLeftText.setText(number.toString());
+                conversionLeftText.setText(number.toString());
+            }
 
+            else {
+                conversionLeftText.setText("");
+            }
+            flashConversionArrow();
 
         } catch (NumberFormatException e) {
             conversionRightText.setText(conversionRightText.getText().substring(0, conversionRightText.getText().length()-1));
@@ -191,4 +209,11 @@ public class MainWindowController {
         }
     }
 
+    private void flashConversionArrow() {
+        conversionArrow.setFill(BLACK);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrow, BLACK, GRAY);
+        ft.setCycleCount(1);
+        ft.setAutoReverse(false);
+        ft.play();
+    }
 }
