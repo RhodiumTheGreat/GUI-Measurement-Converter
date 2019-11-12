@@ -20,7 +20,7 @@ public class Type {
         return conversions;
     }
 
-    public void setConversions(ArrayList<Conversion> conversions) {
-        this.conversions = conversions;
+    public void addConversion(Conversion conversion) {
+        this.conversions.add(conversion);
     }
 }
