@@ -99,19 +99,20 @@ public class MainWindowController {
     private void loadListLeft(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
+
+        // Load the conversions into the ComboBoxes
         loadList(conversions, conversionLeftSelector, conversionLeftText);
     }
 
     private void loadListRight(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
+
+        // Load the conversions into the ComboBoxes
         loadList(conversions, conversionRightSelector, conversionRightText);
     }
 
     private ObservableList<Conversion> conversionsByType(Type type){
-        /* TODO
-         *   Take the type of conversion and create a unique observable list of conversions to be used in the left and right ComboBox
-         */
         ObservableList<Conversion> conversions = FXCollections.observableArrayList();
 
         conversions.addAll(type.getConversions());
@@ -119,6 +120,7 @@ public class MainWindowController {
     }
 
     private void loadList(ObservableList<Conversion> conversions, ComboBox<Conversion> conversionSelector, TextField conversionText){
+        // Load the conversions into the ComboBoxes
         conversionSelector.setItems(conversions);
         conversionSelector.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue != null) {
@@ -151,15 +153,15 @@ public class MainWindowController {
 
     @FXML
     protected void onLeftTyped(){
-        onTyped(conversionLeftSelector, conversionRightSelector, conversionLeftText, conversionRightText);
+        runConversion(conversionLeftSelector, conversionRightSelector, conversionLeftText, conversionRightText);
     }
 
     @FXML
     protected void onRightTyped(){
-        onTyped(conversionRightSelector, conversionLeftSelector, conversionRightText, conversionLeftText);
+        runConversion(conversionRightSelector, conversionLeftSelector, conversionRightText, conversionLeftText);
     }
 
-    private void onTyped(ComboBox<Conversion> conversionSelector1, ComboBox<Conversion> ConversionSelector2, TextField conversionText1, TextField conversionText2){
+    private void runConversion(ComboBox<Conversion> conversionSelector1, ComboBox<Conversion> ConversionSelector2, TextField conversionText1, TextField conversionText2){
         try{
             if (!conversionText1.getText().equals("") && ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
                 Double number = Double.parseDouble(conversionText1.getText());
