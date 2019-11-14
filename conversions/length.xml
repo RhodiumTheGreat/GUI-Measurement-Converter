@@ -6,10 +6,10 @@
     </conversion>
     <conversion>
         <title>CM</title>
-        <multiplier>0.01</multiplier>
+        <multiplier>100</multiplier>
     </conversion>
     <conversion>
         <title>MM</title>
-        <multiplier>0.001</multiplier>
+        <multiplier>1000</multiplier>
     </conversion>
 </conversions>
