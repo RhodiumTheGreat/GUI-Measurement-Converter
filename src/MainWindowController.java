@@ -99,58 +99,13 @@ public class MainWindowController {
     private void loadListLeft(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
-
-        conversionLeftSelector.setItems(conversions);
-        conversionLeftSelector.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (newValue != null) {
-                System.out.println("Selected Conversion Value: " + newValue.getName());
-                conversionLeftText.setDisable(false);
-                conversionLeftText.setPromptText("Type your conversion");
-                onRightTyped();
-            }
-        });
-
-        // Show the Conversion's name rather than a reference to the object
-        conversionLeftSelector.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Conversion conversion) {
-                return conversion.getName();
-            }
-
-            @Override
-            public Conversion fromString(String string) {
-                return null;
-            }
-        });
+        loadList(conversions, conversionLeftSelector, conversionLeftText);
     }
 
     private void loadListRight(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
-
-        conversionRightSelector.setItems(conversions);
-        conversionRightSelector.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (newValue != null) {
-                System.out.println("Selected Conversion Value: " + newValue.getName());
-                conversionRightText.setDisable(false);
-                conversionRightText.setPromptText("Type your conversion");
-                onLeftTyped();
-            }
-        });
-
-        // Show the Conversion's name rather than a reference to the object
-        conversionRightSelector.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Conversion conversion) {
-                return conversion.getName();
-            }
-
-            @Override
-            public Conversion fromString(String string) {
-                return null;
-            }
-        });
-
+        loadList(conversions, conversionRightSelector, conversionRightText);
     }
 
     private ObservableList<Conversion> conversionsByType(Type type){
@@ -163,49 +118,68 @@ public class MainWindowController {
         return conversions;
     }
 
+    private void loadList(ObservableList<Conversion> conversions, ComboBox<Conversion> conversionSelector, TextField conversionText){
+        conversionSelector.setItems(conversions);
+        conversionSelector.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                System.out.println("Selected Conversion Value: " + newValue.getName());
+                conversionText.setDisable(false);
+                conversionText.setPromptText("Type your conversion");
+
+                if (conversionSelector == conversionLeftSelector){
+                    onRightTyped();
+                }
+                else{
+                    onLeftTyped();
+                }
+            }
+        });
+
+        // Show the Conversion's name rather than a reference to the object
+        conversionSelector.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Conversion conversion) {
+                return conversion.getName();
+            }
+
+            @Override
+            public Conversion fromString(String string) {
+                return null;
+            }
+        });
+    }
+
     @FXML
     protected void onLeftTyped(){
-        try{
-            if (!conversionLeftText.getText().equals("")) {
-                Double number = Double.parseDouble(conversionLeftText.getText());
-
-                number /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
-                number *= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
-
-                conversionRightText.setText(number.toString());
-            }
-
-            else {
-                conversionRightText.setText("");
-            }
-            flashConversionArrow();
-
-        } catch (NumberFormatException e) {
-            conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
-            conversionLeftText.positionCaret(conversionLeftText.getText().length());
-        }
+        onTyped(conversionLeftSelector, conversionRightSelector, conversionLeftText, conversionRightText);
     }
 
     @FXML
     protected void onRightTyped(){
+        onTyped(conversionRightSelector, conversionLeftSelector, conversionRightText, conversionLeftText);
+    }
+
+    private void onTyped(ComboBox<Conversion> conversionSelector1, ComboBox<Conversion> ConversionSelector2, TextField conversionText1, TextField conversionText2){
         try{
-            if (!conversionRightText.getText().equals("")) {
-                Double number = Double.parseDouble(conversionRightText.getText());
+            if (!conversionText1.getText().equals("") && ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
+                Double number = Double.parseDouble(conversionText1.getText());
 
-                number /= conversionRightSelector.getSelectionModel().getSelectedItem().getMultiplier();
-                number *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                number /= conversionSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
 
-                conversionLeftText.setText(number.toString());
+                conversionText2.setText(number.toString());
             }
 
             else {
-                conversionLeftText.setText("");
+                conversionText2.setText("");
             }
-            flashConversionArrow();
+            if (ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
+                flashConversionArrow();
+            }
 
         } catch (NumberFormatException e) {
-            conversionRightText.setText(conversionRightText.getText().substring(0, conversionRightText.getText().length()-1));
-            conversionRightText.positionCaret(conversionRightText.getText().length());
+            conversionText1.setText(conversionText1.getText().substring(0, conversionText1.getText().length()-1));
+            conversionText1.positionCaret(conversionText1.getText().length());
         }
     }
 
