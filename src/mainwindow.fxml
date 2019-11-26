@@ -7,9 +7,9 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="130.0" prefWidth="465.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainWindowController">
+<BorderPane fx:id="mainWindow" prefHeight="130.0" prefWidth="465.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainWindowController">
     <center>
-        <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
+        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0">
             <ComboBox id="conversionTypeSelector" fx:id="conversionTypeSelector" minWidth="200" prefHeight="26.0" prefWidth="280.0" promptText="Type of Conversion">
                 <opaqueInsets>
                     <Insets />
@@ -31,6 +31,11 @@
                   </cursor></TextField>
                 </VBox>
             </HBox>
+         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;">
+            <children>
+               <Label style="-fx-padding: 10;" text="View Previous Conversions" />
+               <Button fx:id="conversionsDropdown" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#dropDown" style="-fx-padding: 10;" text="V" />
+            </children></HBox>
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
