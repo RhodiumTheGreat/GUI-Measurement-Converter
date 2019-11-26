@@ -4,10 +4,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
@@ -23,6 +28,10 @@ public class MainWindowController {
 
     private ConversionManager conversionManager;
     private ObservableList<Type> types;
+    private double minHeight = 217;
+
+    @FXML
+    private BorderPane mainWindow;
 
     @FXML
     private ComboBox<Type> conversionTypeSelector = new ComboBox<>();;
@@ -42,7 +51,11 @@ public class MainWindowController {
     @FXML
     private SVGPath conversionArrow;
 
+    @FXML
+    private Button conversionsDropDown;
+
     public void initialize() throws FileNotFoundException {
+        //minHeight = mainWindow.getScene().getWindow().getHeight();
         conversionManager = new ConversionManager();
 
         // Call ConversionManager to load the conversion
@@ -191,5 +204,18 @@ public class MainWindowController {
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();
+    }
+
+    @FXML
+    private void dropDown(){
+        Window stage = mainWindow.getScene().getWindow();
+        if (stage.getHeight() == minHeight){
+            stage.setHeight(900);
+            conversionsDropDown.setText("^");
+        }
+        else {
+            stage.setHeight(minHeight);
+            conversionsDropDown.setText("V");
+        }
     }
 }
