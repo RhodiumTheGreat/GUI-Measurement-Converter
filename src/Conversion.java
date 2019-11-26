@@ -1,7 +1,3 @@
-/* TODO
- *  Create a new type class to store all of the conversions to allow the use of an ObservableList in the ComboBoxes
- */
-
 public class Conversion {
     Type type;
     String name;

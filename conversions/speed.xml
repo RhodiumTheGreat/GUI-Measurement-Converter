@@ -24,4 +24,12 @@
         <title>Knot</title>
         <multiplier>1.94384</multiplier>
     </conversion>
+    <conversion>
+        <title>Speed Of Sound</title>
+        <multiplier>0.00291545</multiplier>
+    </conversion>
+    <conversion>
+        <title>Speed Of Light</title>
+        <multiplier>3.33564e-9</multiplier>
+    </conversion>
 </conversions>
