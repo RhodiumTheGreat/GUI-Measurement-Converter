@@ -28,7 +28,7 @@ public class MainWindowController {
 
     private ConversionManager conversionManager;
     private ObservableList<Type> types;
-    private double minHeight = 217;
+    private double minHeight = 0;
 
     @FXML
     private BorderPane mainWindow;
@@ -52,10 +52,9 @@ public class MainWindowController {
     private SVGPath conversionArrow;
 
     @FXML
-    private Button conversionsDropDown;
+    private Button conversionsDropDown = new Button();
 
     public void initialize() throws FileNotFoundException {
-        //minHeight = mainWindow.getScene().getWindow().getHeight();
         conversionManager = new ConversionManager();
 
         // Call ConversionManager to load the conversion
@@ -106,6 +105,7 @@ public class MainWindowController {
                 return null;
             }
         });
+
 
     }
 
@@ -209,6 +209,11 @@ public class MainWindowController {
     @FXML
     private void dropDown(){
         Window stage = mainWindow.getScene().getWindow();
+
+        if (minHeight == 0){
+            minHeight = stage.getHeight();
+        }
+
         if (stage.getHeight() == minHeight){
             stage.setHeight(900);
             conversionsDropDown.setText("^");

@@ -31,7 +31,7 @@
                   </cursor></TextField>
                 </VBox>
             </HBox>
-         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;">
+         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;">
             <children>
                <Label style="-fx-padding: 10;" text="View Previous Conversions" />
                <Button fx:id="conversionsDropdown" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#dropDown" style="-fx-padding: 10;" text="V" />

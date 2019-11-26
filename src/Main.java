@@ -14,6 +14,7 @@ public class Main extends Application {
         stage.getIcons().add(new Image("file:media/icon.png"));
         stage.setTitle("Measurement Converter");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 
