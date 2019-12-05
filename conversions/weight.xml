@@ -15,7 +15,7 @@
     <conversion>
         <title>Pounds</title>
         <multiplier>2.20462</multiplier>
-        <title>Ounces</title>
-        <multiplier>35.274</multiplier>
+        <title2>Ounces</title2>
+        <multiplier2>35.274</multiplier2>
     </conversion>
 </conversions>

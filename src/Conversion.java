@@ -1,7 +1,9 @@
+import java.util.ArrayList;
+
 public class Conversion {
     Type type;
     String name;
-    Double multiplier;
+    ArrayList<Double> multiplier = new ArrayList<Double>();
 
     public Conversion(Type type){
         setType(type);
@@ -23,11 +25,11 @@ public class Conversion {
         this.name = name;
     }
 
-    public Double getMultiplier() {
-        return multiplier;
+    public double getMultiplier() {
+        return multiplier.get(0);
     }
 
     public void setMultiplier(Double multiplier) {
-        this.multiplier = multiplier;
+        this.multiplier.add(multiplier);
     }
 }
