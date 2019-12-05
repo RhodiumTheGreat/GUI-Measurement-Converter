@@ -52,7 +52,10 @@ public class MainWindowController {
     private SVGPath conversionArrow;
 
     @FXML
-    private Button conversionsDropDown = new Button();
+    private Button conversionsDropdown;
+
+    @FXML
+    private Button conversionsSave;
 
     public void initialize() throws FileNotFoundException {
         conversionManager = new ConversionManager();
@@ -216,11 +219,16 @@ public class MainWindowController {
 
         if (stage.getHeight() == minHeight){
             stage.setHeight(900);
-            conversionsDropDown.setText("^");
+            conversionsDropdown.setText("^");
         }
         else {
             stage.setHeight(minHeight);
-            conversionsDropDown.setText("V");
+            conversionsDropdown.setText("V");
         }
+    }
+
+    @FXML
+    private void saveConversion(){
+        return;
     }
 }

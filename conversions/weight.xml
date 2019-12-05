@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversions>
+    <conversion>
+        <title>Kilograms</title>
+        <multiplier>1</multiplier>
+    </conversion>
+    <conversion>
+        <title>Pounds</title>
+        <multiplier>2.20462</multiplier>
+    </conversion>
+    <conversion>
+        <title>Ounces</title>
+        <multiplier>35.274</multiplier>
+    </conversion>
+    <conversion>
+        <title>Pounds</title>
+        <multiplier>2.20462</multiplier>
+        <title>Ounces</title>
+        <multiplier>35.274</multiplier>
+    </conversion>
+</conversions>
