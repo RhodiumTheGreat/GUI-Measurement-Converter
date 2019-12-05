@@ -49,7 +49,10 @@ public class MainWindowController {
     private TextField conversionRightText;
 
     @FXML
-    private SVGPath conversionArrow;
+    private SVGPath conversionArrowSingle;
+
+    @FXML
+    private SVGPath conversionArrowDouble;
 
     @FXML
     private Button conversionsDropdown;
@@ -202,8 +205,8 @@ public class MainWindowController {
     }
 
     private void flashConversionArrow() {
-        conversionArrow.setFill(BLACK);
-        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrow, BLACK, GRAY);
+        conversionArrowSingle.setFill(BLACK);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();

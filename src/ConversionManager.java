@@ -93,24 +93,6 @@ public class ConversionManager {
                                     continue;
                                 }
                             }
-
-                            // Used to check if there is another title and multiplier.
-                            // Some conversions will have two results from one value, like kilograms to pounds and ounces, this checks to see if it will be one of those.
-                            if (event.isStartElement()) {
-                                if (event.asStartElement().getName().getLocalPart().equals("title2")) {
-                                    conversion.setName(conversion.getName() + " and " + eventReader.nextEvent().asCharacters().getData());
-                                    System.out.println(conversion.getName());
-                                    continue;
-                                }
-                            }
-
-                            if (event.isStartElement()) {
-                                if (event.asStartElement().getName().getLocalPart().equals("multiplier2")) {
-                                    conversion.setMultiplier(Double.parseDouble(eventReader.nextEvent().asCharacters().getData()));
-                                    System.out.println(conversion.getMultiplier());
-                                    continue;
-                                }
-                            }
                         }
 
                         if (event.isEndElement()) {
