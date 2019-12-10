@@ -19,6 +19,8 @@ import javafx.util.StringConverter;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.BLACK;
@@ -184,9 +186,12 @@ public class MainWindowController {
         try{
             if (!conversionText1.getText().equals("") && ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
                 Double number = Double.parseDouble(conversionText1.getText());
+                BigDecimal bd = BigDecimal.valueOf(number);
 
                 number /= conversionSelector1.getSelectionModel().getSelectedItem().getMultiplier();
                 number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+
+                number = round(number, bd.scale());
 
                 conversionText2.setText(number.toString());
             }
@@ -233,5 +238,13 @@ public class MainWindowController {
     @FXML
     private void saveConversion(){
         return;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 2) places = 2;
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
