@@ -49,10 +49,16 @@ public class MainWindowController {
     private TextField conversionRightText;
 
     @FXML
-    private SVGPath conversionArrow;
+    private SVGPath conversionArrowSingle;
 
     @FXML
-    private Button conversionsDropDown = new Button();
+    private SVGPath conversionArrowDouble;
+
+    @FXML
+    private Button conversionsDropdown;
+
+    @FXML
+    private Button conversionsSave;
 
     public void initialize() throws FileNotFoundException {
         conversionManager = new ConversionManager();
@@ -199,8 +205,8 @@ public class MainWindowController {
     }
 
     private void flashConversionArrow() {
-        conversionArrow.setFill(BLACK);
-        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrow, BLACK, GRAY);
+        conversionArrowSingle.setFill(BLACK);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();
@@ -216,11 +222,16 @@ public class MainWindowController {
 
         if (stage.getHeight() == minHeight){
             stage.setHeight(900);
-            conversionsDropDown.setText("^");
+            conversionsDropdown.setText("^");
         }
         else {
             stage.setHeight(minHeight);
-            conversionsDropDown.setText("V");
+            conversionsDropdown.setText("V");
         }
+    }
+
+    @FXML
+    private void saveConversion(){
+        return;
     }
 }

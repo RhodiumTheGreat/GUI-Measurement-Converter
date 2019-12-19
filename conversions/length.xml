@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <conversions>
     <conversion>
-        <title>M</title>
+        <title>Metres</title>
         <multiplier>1</multiplier>
     </conversion>
     <conversion>
-        <title>CM</title>
+        <title>Centimetres</title>
         <multiplier>100</multiplier>
     </conversion>
     <conversion>
-        <title>MM</title>
+        <title>Millimetres</title>
         <multiplier>1000</multiplier>
     </conversion>
 </conversions>

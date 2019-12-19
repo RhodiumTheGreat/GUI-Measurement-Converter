@@ -1,7 +1,7 @@
 public class Conversion {
     Type type;
     String name;
-    Double multiplier;
+    double multiplier;
 
     public Conversion(Type type){
         setType(type);
@@ -23,11 +23,11 @@ public class Conversion {
         this.name = name;
     }
 
-    public Double getMultiplier() {
+    public double getMultiplier() {
         return multiplier;
     }
 
-    public void setMultiplier(Double multiplier) {
+    public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }
 }

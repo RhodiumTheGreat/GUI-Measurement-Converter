@@ -14,6 +14,7 @@
                 <opaqueInsets>
                     <Insets />
                 </opaqueInsets></ComboBox>
+         <Label layoutX="180.0" layoutY="107.0" text="Single Value Conversion" textAlignment="CENTER" />
             <HBox alignment="CENTER">
                 <VBox style="-fx-padding: 10;">
                     <ComboBox id="conversionLeftSelector" fx:id="conversionLeftSelector" disable="true" minWidth="200" promptText="Select Measurement" />
@@ -22,7 +23,7 @@
                      <Cursor fx:constant="TEXT" />
                   </cursor></TextField>
                 </VBox>
-            <SVGPath id="conversionArrow" fx:id="conversionArrow" content="M0,10L10,0,10,20 M10,9 L20,9,20,11,10,11 M30,10L20,0,20,20" fill="#00000080" />
+            <SVGPath id="conversionArrow" fx:id="conversionArrowSingle" content="M0,10L10,0,10,20 M10,9 L20,9,20,11,10,11 M30,10L20,0,20,20" fill="#00000080" />
                 <VBox style="-fx-padding: 10;">
                     <ComboBox id="conversionRightSelector" fx:id="conversionRightSelector" disable="true" minWidth="200" promptText="Select Measurement" />
                <TextField id="conversionRightText" fx:id="conversionRightText" disable="true" onKeyTyped="#onRightTyped" promptText="Please Select a Conversion">
@@ -31,10 +32,41 @@
                   </cursor></TextField>
                 </VBox>
             </HBox>
-         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;">
+         <Label text="Double Value Conversion" textAlignment="CENTER" />
+            <HBox alignment="CENTER">
+                <VBox style="-fx-padding: 10;">
+                    <ComboBox id="conversionLeftSelector" fx:id="conversionLeftSelectorDouble" disable="true" minWidth="200" promptText="Select Measurement" />
+                    <TextField id="conversionLeftText" fx:id="conversionLeftTextDouble" disable="true" onKeyTyped="#onLeftTyped" promptText="Please Select a Conversion">
+                        <cursor>
+                            <Cursor fx:constant="TEXT" />
+                        </cursor></TextField>
+                </VBox>
+                <SVGPath id="conversionArrow" fx:id="conversionArrowDouble" content="M0,10L10,0,10,20 M10,9 L20,9,20,11,10,11 M30,10L20,0,20,20" fill="#00000080" />
+                <VBox style="-fx-padding: 10;">
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                          <ComboBox id="conversionRightSelector" fx:id="conversionRightSelectorDouble" disable="true" minWidth="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Select 1st" />
+                     <ComboBox disable="true" prefWidth="150.0" promptText="Select 2nd" />
+                  </children>
+               </HBox>
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                          <TextField id="conversionRightText" fx:id="conversionRightTextDouble" disable="true" onKeyTyped="#onRightTyped" promptText="Please Select">
+                              <cursor>
+                                  <Cursor fx:constant="TEXT" />
+                              </cursor>
+                     </TextField>
+                     <TextField disable="true" promptText="Please Select" />
+                  </children>
+               </HBox>
+                </VBox>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;">
             <children>
-               <Label style="-fx-padding: 10;" text="View Previous Conversions" />
-               <Button fx:id="conversionsDropdown" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#dropDown" style="-fx-padding: 10;" text="V" />
+               <Button fx:id="conversionsSave" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#saveConversion" style="-fx-padding: 10;" text="Save" />
+               <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 10;" />
+               <Label disable="true" style="-fx-padding: 10;" text="View Previous Conversions" />
+               <Button fx:id="conversionsDropdown" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" onAction="#dropDown" style="-fx-padding: 10;" text="V" />
             </children></HBox>
             <opaqueInsets>
                 <Insets />
@@ -42,9 +74,9 @@
         </VBox>
     </center>
    <top>
-      <Label text="Measurement Converter" BorderPane.alignment="CENTER">
+      <Label style="-fx-padding: 10;" text="Measurement Converter" BorderPane.alignment="CENTER">
          <font>
-            <Font name="System Bold" size="16.0" />
+            <Font name="System Bold" size="21.0" />
          </font>
       </Label>
    </top>
