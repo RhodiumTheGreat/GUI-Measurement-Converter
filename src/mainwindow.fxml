@@ -36,7 +36,7 @@
             <HBox alignment="CENTER">
                 <VBox style="-fx-padding: 10;">
                     <ComboBox id="conversionLeftSelector" fx:id="conversionLeftSelectorDouble" disable="true" minWidth="200" promptText="Select Measurement" />
-                    <TextField id="conversionLeftText" fx:id="conversionLeftTextDouble" disable="true" onKeyTyped="#onLeftTyped" promptText="Please Select a Conversion">
+                    <TextField id="conversionLeftText" fx:id="conversionLeftTextDouble" disable="true" onKeyTyped="#onLeftDoubleTyped" promptText="Please Select a Conversion">
                         <cursor>
                             <Cursor fx:constant="TEXT" />
                         </cursor></TextField>
@@ -45,18 +45,18 @@
                 <VBox style="-fx-padding: 10;">
                <HBox prefHeight="100.0" prefWidth="200.0">
                   <children>
-                          <ComboBox id="conversionRightSelector" fx:id="conversionRightSelectorDouble" disable="true" minWidth="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Select 1st" />
-                     <ComboBox disable="true" prefWidth="150.0" promptText="Select 2nd" />
+                          <ComboBox id="conversionRightSelector" fx:id="conversionRightSelectorDouble1" disable="true" minWidth="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Select 1st" />
+                     <ComboBox fx:id="conversionRightSelectorDouble2" disable="true" prefWidth="150.0" promptText="Select 2nd" />
                   </children>
                </HBox>
                <HBox prefHeight="100.0" prefWidth="200.0">
                   <children>
-                          <TextField id="conversionRightText" fx:id="conversionRightTextDouble" disable="true" onKeyTyped="#onRightTyped" promptText="Please Select">
+                          <TextField id="conversionRightText" fx:id="conversionRightTextDouble1" disable="true" onKeyTyped="#onRightDoubleTyped1" promptText="Please Select">
                               <cursor>
                                   <Cursor fx:constant="TEXT" />
                               </cursor>
                      </TextField>
-                     <TextField disable="true" promptText="Please Select" />
+                     <TextField fx:id="conversionRightTextDouble2" disable="true" onKeyTyped="#onRightDoubleTyped2" promptText="Please Select" />
                   </children>
                </HBox>
                 </VBox>
