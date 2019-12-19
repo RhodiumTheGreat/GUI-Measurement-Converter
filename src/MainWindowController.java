@@ -19,6 +19,8 @@ import javafx.util.StringConverter;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.BLACK;
@@ -34,7 +36,7 @@ public class MainWindowController {
     private BorderPane mainWindow;
 
     @FXML
-    private ComboBox<Type> conversionTypeSelector = new ComboBox<>();;
+    private ComboBox<Type> conversionTypeSelector = new ComboBox<>();
 
     @FXML
     private ComboBox<Conversion> conversionLeftSelector = new ComboBox<>();
@@ -47,6 +49,25 @@ public class MainWindowController {
 
     @FXML
     private TextField conversionRightText;
+
+    @FXML
+    private ComboBox<Conversion> conversionLeftSelectorDouble = new ComboBox<>();
+
+    @FXML
+    private ComboBox<Conversion> conversionRightSelectorDouble1 = new ComboBox<>();
+
+    @FXML
+    private ComboBox<Conversion> conversionRightSelectorDouble2 = new ComboBox<>();
+
+
+    @FXML
+    private TextField conversionLeftTextDouble;
+
+    @FXML
+    private TextField conversionRightTextDouble1;
+
+    @FXML
+    private TextField conversionRightTextDouble2;
 
     @FXML
     private SVGPath conversionArrowSingle;
@@ -80,6 +101,8 @@ public class MainWindowController {
                 // Code that runs when ComboBox is changed
                 System.out.println("Selected Conversion Type: " + newValue.getType());
 
+                // TODO Refactor drop down refresh into it's own method
+                // Single value conversions
                 conversionLeftSelector.setDisable(false);
                 conversionLeftSelector.getSelectionModel().clearSelection();
                 conversionLeftSelector.setPromptText("Select Measurement");
@@ -94,8 +117,34 @@ public class MainWindowController {
                 conversionRightText.setDisable(true);
                 conversionRightText.setPromptText("Please Select a Conversion");
 
-                loadListLeft(newValue);
-                loadListRight(newValue);
+                //Double value conversions
+                conversionLeftSelectorDouble.setDisable(false);
+                conversionLeftSelectorDouble.getSelectionModel().clearSelection();
+                conversionLeftSelectorDouble.setPromptText("Select Measurement");
+
+                conversionLeftTextDouble.setDisable(true);
+                conversionLeftTextDouble.setPromptText("Please Select a Conversion");
+
+                conversionRightSelectorDouble1.setDisable(false);
+                conversionRightSelectorDouble1.getSelectionModel().clearSelection();
+                conversionRightSelectorDouble1.setPromptText("Select 1st");
+
+                conversionRightTextDouble1.setDisable(true);
+                conversionRightTextDouble1.setPromptText("Please Select");
+
+                conversionRightSelectorDouble2.setDisable(false);
+                conversionRightSelectorDouble2.getSelectionModel().clearSelection();
+                conversionRightSelectorDouble2.setPromptText("Select 2nd");
+
+                conversionRightTextDouble2.setDisable(true);
+                conversionRightTextDouble2.setPromptText("Please Select");
+
+                loadListLeftSingle(newValue);
+                loadListRightSingle(newValue);
+
+                loadListLeftDouble(newValue);
+                loadListRightDouble1(newValue);
+                loadListRightDouble2(newValue);
             }
         });
 
@@ -115,7 +164,9 @@ public class MainWindowController {
 
     }
 
-    private void loadListLeft(Type type) {
+    // ----- Load Lists of Conversions -----
+
+    private void loadListLeftSingle(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
 
@@ -123,13 +174,38 @@ public class MainWindowController {
         loadList(conversions, conversionLeftSelector, conversionLeftText);
     }
 
-    private void loadListRight(Type type) {
+    private void loadListRightSingle(Type type) {
         // Add the unique observable list to a local one
         ObservableList<Conversion> conversions = conversionsByType(type);
 
         // Load the conversions into the ComboBoxes
         loadList(conversions, conversionRightSelector, conversionRightText);
     }
+
+    private void loadListLeftDouble(Type type) {
+        // Add the unique observable list to a local one
+        ObservableList<Conversion> conversions = conversionsByType(type);
+
+        // Load the conversions into the ComboBoxes
+        loadList(conversions, conversionLeftSelectorDouble, conversionLeftTextDouble);
+    }
+
+    private void loadListRightDouble1(Type type) {
+        // Add the unique observable list to a local one
+        ObservableList<Conversion> conversions = conversionsByType(type);
+
+        // Load the conversions into the ComboBoxes
+        loadList(conversions, conversionRightSelectorDouble1, conversionRightTextDouble1);
+    }
+
+    private void loadListRightDouble2(Type type) {
+        // Add the unique observable list to a local one
+        ObservableList<Conversion> conversions = conversionsByType(type);
+
+        // Load the conversions into the ComboBoxes
+        loadList(conversions, conversionRightSelectorDouble2, conversionRightTextDouble2);
+    }
+
 
     private ObservableList<Conversion> conversionsByType(Type type){
         ObservableList<Conversion> conversions = FXCollections.observableArrayList();
@@ -145,13 +221,26 @@ public class MainWindowController {
             if (newValue != null) {
                 System.out.println("Selected Conversion Value: " + newValue.getName());
                 conversionText.setDisable(false);
-                conversionText.setPromptText("Type your conversion");
+                conversionText.setPromptText("Type value");
 
+                // Update values as if typed when the conversion is loaded..
                 if (conversionSelector == conversionLeftSelector){
                     onRightTyped();
                 }
-                else{
+                else if (conversionSelector == conversionRightSelector){
                     onLeftTyped();
+                }
+                else if (conversionSelector == conversionLeftSelectorDouble){
+                    onRightDoubleTyped1();
+                    onRightDoubleTyped2();
+                }
+                else if (conversionSelector == conversionRightSelectorDouble1){
+                    onLeftDoubleTyped();
+                    onRightDoubleTyped2();
+                }
+                else if (conversionSelector == conversionRightSelectorDouble2){
+                    onLeftDoubleTyped();
+                    onRightDoubleTyped1();
                 }
             }
         });
@@ -170,31 +259,53 @@ public class MainWindowController {
         });
     }
 
+    // ----- When the user interacts with the keyboard ----- //
     @FXML
     protected void onLeftTyped(){
-        runConversion(conversionLeftSelector, conversionRightSelector, conversionLeftText, conversionRightText);
+        runConversionSingle(conversionLeftSelector, conversionRightSelector, conversionLeftText, conversionRightText);
     }
 
     @FXML
     protected void onRightTyped(){
-        runConversion(conversionRightSelector, conversionLeftSelector, conversionRightText, conversionLeftText);
+        runConversionSingle(conversionRightSelector, conversionLeftSelector, conversionRightText, conversionLeftText);
     }
 
-    private void runConversion(ComboBox<Conversion> conversionSelector1, ComboBox<Conversion> ConversionSelector2, TextField conversionText1, TextField conversionText2){
+    @FXML
+    protected void onLeftDoubleTyped(){
+        runConversionsDouble(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
+    }
+
+    @FXML
+    protected void onRightDoubleTyped1(){
+        //runConversionsDouble();
+        return;
+    }
+
+    @FXML
+    protected void onRightDoubleTyped2(){
+        //runConversionsDouble();
+        return;
+    }
+
+    // Run the conversion for the single value conversions
+    private void runConversionSingle(ComboBox<Conversion> conversionSelector1, ComboBox<Conversion> conversionSelector2, TextField conversionText1, TextField conversionText2){
         try{
-            if (!conversionText1.getText().equals("") && ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
-                Double number = Double.parseDouble(conversionText1.getText());
+            if (!conversionText1.getText().equals("") && conversionSelector2.getSelectionModel().getSelectedItem() != null) {
+                double number = Double.parseDouble(conversionText1.getText());
+                BigDecimal bd = BigDecimal.valueOf(number);
 
                 number /= conversionSelector1.getSelectionModel().getSelectedItem().getMultiplier();
-                number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+                number *= conversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
 
-                conversionText2.setText(number.toString());
+                number = round(number, bd.scale());
+
+                conversionText2.setText(Double.toString(number));
             }
 
             else {
                 conversionText2.setText("");
             }
-            if (ConversionSelector2.getSelectionModel().getSelectedItem() != null) {
+            if (conversionSelector2.getSelectionModel().getSelectedItem() != null) {
                 flashConversionArrow();
             }
 
@@ -204,6 +315,51 @@ public class MainWindowController {
         }
     }
 
+    // Run the conversions for the double value conversions.
+    private void runConversionsDouble(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
+        // TODO Figure this shit out
+        try{
+            if (!conversionLeftText.getText().equals("") && conversionRightSelector1.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
+                double number1 = Double.parseDouble(conversionLeftText.getText());
+                double number2;
+                BigDecimal bd = BigDecimal.valueOf(number1);
+
+                number1 /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1);
+                number2 = conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier() % number1;
+                System.out.println(number2);
+
+                number2 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                number1 *= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                number2 *= conversionRightSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+
+
+
+                //number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+
+                number1 = (int) number1;
+                number2 = round(number2, bd.scale());
+
+                conversionRightText1.setText(Double.toString(number1));
+                conversionRightText2.setText(Double.toString(number2));
+            }
+
+            else {
+                conversionRightText1.setText("");
+                conversionRightText2.setText("");
+            }
+            if (conversionRightSelector1.getSelectionModel().getSelectedItem() != null || conversionRightSelector1.getSelectionModel().getSelectedItem() != null) {
+                flashConversionArrow();
+            }
+
+        } catch (NumberFormatException e) {
+            conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
+            conversionLeftText.positionCaret(conversionLeftText.getText().length());
+        }
+    }
+    // ----- ----- //
+
+    // ----- Flash the arrows when the program runs a conversion ----- //
     private void flashConversionArrow() {
         conversionArrowSingle.setFill(BLACK);
         FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
@@ -211,6 +367,15 @@ public class MainWindowController {
         ft.setAutoReverse(false);
         ft.play();
     }
+
+    private void flashConversionsArrowDouble() {
+        conversionArrowDouble.setFill(BLACK);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
+        ft.setCycleCount(1);
+        ft.setAutoReverse(false);
+        ft.play();
+    }
+    // ----- ----- //
 
     @FXML
     private void dropDown(){
@@ -233,5 +398,13 @@ public class MainWindowController {
     @FXML
     private void saveConversion(){
         return;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 2) places = 2;
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
