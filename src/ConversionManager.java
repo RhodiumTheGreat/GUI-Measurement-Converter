@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConversionManager {
+class ConversionManager {
     private ObservableList<Type> types = FXCollections.observableArrayList();
 
-    public ConversionManager(){
+    ConversionManager(){
     }
 
-    public static List readConversions(){
+    private static List readConversions(){
 
         List<String> result = null;
 
         try (Stream<Path> walk = Files.walk(Paths.get("conversions"))) {
 
-            result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
+            result = walk.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
 
             result.forEach(System.out::println);
 
@@ -37,7 +37,7 @@ public class ConversionManager {
         return result;
     }
 
-    private void loadConversions(List result) throws FileNotFoundException {
+    private void loadConversions(List result) {
         String typeName;
         for (Object i : result) {
             File f = new File(i.toString().replace("]", "").replace("[",""));
@@ -72,7 +72,7 @@ public class ConversionManager {
                         event = eventReader.nextEvent();
                         if (event.isStartElement()) {
                             if (event.asStartElement().getName().getLocalPart().equals("conversion")) {
-                                event = eventReader.nextEvent();
+                                eventReader.nextEvent();
                                 conversion = new Conversion(type);
                                 System.out.println("Conversion object is created");
                                 continue;
@@ -120,7 +120,7 @@ public class ConversionManager {
         }
     }
 
-    public void initialise() throws FileNotFoundException {
+    void initialise() {
         loadConversions(readConversions());
 
         for(Type x: types) {
@@ -130,7 +130,7 @@ public class ConversionManager {
         }
     }
 
-    public ObservableList<Type> getTypes(){
+    ObservableList<Type> getTypes(){
         return this.types;
     }
 }

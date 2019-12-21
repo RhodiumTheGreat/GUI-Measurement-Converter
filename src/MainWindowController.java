@@ -1,35 +1,25 @@
 import javafx.animation.FillTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.GRAY;
 
 public class MainWindowController {
 
-    private ConversionManager conversionManager;
-    private ObservableList<Type> types;
     private double minHeight = 0;
 
     @FXML
@@ -77,17 +67,18 @@ public class MainWindowController {
     @FXML
     private Button conversionsDropdown;
 
-    @FXML
-    private Button conversionsSave;
+    // Save feature not implemented
+    // @FXML
+    // private Button conversionsSave;
 
     public void initialize() throws FileNotFoundException {
-        conversionManager = new ConversionManager();
+        ConversionManager conversionManager = new ConversionManager();
 
         // Call ConversionManager to load the conversion
         conversionManager.initialise();
 
         // Assign each conversion type to local observable list
-        types = conversionManager.getTypes();
+        ObservableList<Type> types = conversionManager.getTypes();
 
         for(Type x: types) {
             System.out.println("Listed type: " + x.getType());
@@ -100,7 +91,6 @@ public class MainWindowController {
                 // Code that runs when ComboBox is changed
                 System.out.println("Selected Conversion Type: " + newValue.getType());
 
-                // TODO Refactor drop down refresh into it's own method
                 // Single value conversions
                 conversionLeftSelector.setDisable(false);
                 conversionLeftSelector.getSelectionModel().clearSelection();
@@ -357,9 +347,9 @@ public class MainWindowController {
     // Run the conversions for the double value conversions, from left to right.
     private void runConversionsDoubleRTL(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
         try{
-            if (!conversionLeftText.getText().equals("") && conversionRightSelector1.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
+            if (!conversionRightText1.getText().equals("") && conversionLeftSelector.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
                 double number1 = Double.parseDouble(conversionRightText1.getText());
-                double number2 = Double.parseDouble(conversionRightText2.getText());;
+                double number2 = Double.parseDouble(conversionRightText2.getText());
                 BigDecimal bd = BigDecimal.valueOf(number1);
 
                 // NOTE: conversionRightSelector1 and conversionRightTest1 are set to the conversion and text field of the value being edited by the user.
@@ -429,10 +419,10 @@ public class MainWindowController {
 
     @FXML
     private void saveConversion(){
-        return;
+        // Saving not implemented
     }
 
-    public static double round(double value, int places) {
+    private static double round(double value, int places) {
         if (places < 2) places = 2;
 
         BigDecimal bd = BigDecimal.valueOf(value);
