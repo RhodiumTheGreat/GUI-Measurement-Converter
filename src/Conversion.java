@@ -1,33 +1,33 @@
 public class Conversion {
-    Type type;
-    String name;
-    double multiplier;
+    private Type type;
+    private String name;
+    private double multiplier;
 
     public Conversion(Type type){
         setType(type);
     }
 
-    public Type getType() {
+    Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    private void setType(Type type) {
         this.type = type;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public double getMultiplier() {
+    double getMultiplier() {
         return multiplier;
     }
 
-    public void setMultiplier(double multiplier) {
+    void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }
 }

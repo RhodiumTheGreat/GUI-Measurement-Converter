@@ -1,35 +1,25 @@
 import javafx.animation.FillTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.GRAY;
 
 public class MainWindowController {
 
-    private ConversionManager conversionManager;
-    private ObservableList<Type> types;
     private double minHeight = 0;
 
     @FXML
@@ -59,7 +49,6 @@ public class MainWindowController {
     @FXML
     private ComboBox<Conversion> conversionRightSelectorDouble2 = new ComboBox<>();
 
-
     @FXML
     private TextField conversionLeftTextDouble;
 
@@ -78,17 +67,18 @@ public class MainWindowController {
     @FXML
     private Button conversionsDropdown;
 
-    @FXML
-    private Button conversionsSave;
+    // Save feature not implemented
+    // @FXML
+    // private Button conversionsSave;
 
     public void initialize() throws FileNotFoundException {
-        conversionManager = new ConversionManager();
+        ConversionManager conversionManager = new ConversionManager();
 
         // Call ConversionManager to load the conversion
         conversionManager.initialise();
 
         // Assign each conversion type to local observable list
-        types = conversionManager.getTypes();
+        ObservableList<Type> types = conversionManager.getTypes();
 
         for(Type x: types) {
             System.out.println("Listed type: " + x.getType());
@@ -101,7 +91,6 @@ public class MainWindowController {
                 // Code that runs when ComboBox is changed
                 System.out.println("Selected Conversion Type: " + newValue.getType());
 
-                // TODO Refactor drop down refresh into it's own method
                 // Single value conversions
                 conversionLeftSelector.setDisable(false);
                 conversionLeftSelector.getSelectionModel().clearSelection();
@@ -272,19 +261,17 @@ public class MainWindowController {
 
     @FXML
     protected void onLeftDoubleTyped(){
-        runConversionsDouble(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
+        runConversionsDoubleLTR(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
     }
 
     @FXML
     protected void onRightDoubleTyped1(){
-        //runConversionsDouble();
-        return;
+        runConversionsDoubleRTL(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
     }
 
     @FXML
     protected void onRightDoubleTyped2(){
-        //runConversionsDouble();
-        return;
+        runConversionsDoubleRTL(conversionLeftSelectorDouble, conversionRightSelectorDouble2, conversionRightSelectorDouble1, conversionLeftTextDouble, conversionRightTextDouble2, conversionRightTextDouble1);
     }
 
     // Run the conversion for the single value conversions
@@ -315,31 +302,30 @@ public class MainWindowController {
         }
     }
 
-    // Run the conversions for the double value conversions.
-    private void runConversionsDouble(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
-        // TODO Figure this shit out
+    // Run the conversions for the double value conversions, from left to right.
+    private void runConversionsDoubleLTR(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
         try{
             if (!conversionLeftText.getText().equals("") && conversionRightSelector1.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
                 double number1 = Double.parseDouble(conversionLeftText.getText());
                 double number2;
                 BigDecimal bd = BigDecimal.valueOf(number1);
 
+                // The way that this conversion works is inefficient due to repeating processes, however it works.
+                // First it converts the left value to the first right value
                 number1 /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
-                System.out.println(number1);
-                number2 = conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier() % number1;
-                System.out.println(number2);
-
-                number2 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
                 number1 *= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1);
+                // Then it takes the decimal of that result by subtracting the whole number rounded down
+                number2 = number1 - (int) number1;
+                System.out.println(number2);
+                // Then it converts that from the first right value to the second right value
+                number2 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
                 number2 *= conversionRightSelector2.getSelectionModel().getSelectedItem().getMultiplier();
-
-
-
-                //number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
-
+                System.out.println(number2);
+                // The numbers are adequately rounded, with the first being rounded to it's whole
                 number1 = (int) number1;
                 number2 = round(number2, bd.scale());
-
+                // The final converted numbers are displayed.
                 conversionRightText1.setText(Double.toString(number1));
                 conversionRightText2.setText(Double.toString(number2));
             }
@@ -349,7 +335,43 @@ public class MainWindowController {
                 conversionRightText2.setText("");
             }
             if (conversionRightSelector1.getSelectionModel().getSelectedItem() != null || conversionRightSelector1.getSelectionModel().getSelectedItem() != null) {
-                flashConversionArrow();
+                flashConversionArrowDouble();
+            }
+
+        } catch (NumberFormatException e) {
+            conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
+            conversionLeftText.positionCaret(conversionLeftText.getText().length());
+        }
+    }
+
+    // Run the conversions for the double value conversions, from left to right.
+    private void runConversionsDoubleRTL(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
+        try{
+            if (!conversionRightText1.getText().equals("") && conversionLeftSelector.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
+                double number1 = Double.parseDouble(conversionRightText1.getText());
+                double number2 = Double.parseDouble(conversionRightText2.getText());
+                BigDecimal bd = BigDecimal.valueOf(number1);
+
+                // NOTE: conversionRightSelector1 and conversionRightTest1 are set to the conversion and text field of the value being edited by the user.
+                // First it converts the two right values from their multipliers
+                number1 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                number2 /= conversionRightSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1 + " " + number2);
+                // Then it adds the values together and convects that to the left value
+                number1 += number2;
+                number1 *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1);
+                // The number's adequately rounded
+                number1 = round(number1, bd.scale());
+                // The final converted numbers are displayed.
+                conversionLeftText.setText(Double.toString(number1));
+            }
+
+            else {
+                conversionLeftText.setText("");
+            }
+            if (conversionRightSelector1.getSelectionModel().getSelectedItem() != null || conversionRightSelector1.getSelectionModel().getSelectedItem() != null) {
+                flashConversionArrowDouble();
             }
 
         } catch (NumberFormatException e) {
@@ -368,9 +390,9 @@ public class MainWindowController {
         ft.play();
     }
 
-    private void flashConversionsArrowDouble() {
+    private void flashConversionArrowDouble() {
         conversionArrowDouble.setFill(BLACK);
-        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowDouble, BLACK, GRAY);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();
@@ -397,10 +419,10 @@ public class MainWindowController {
 
     @FXML
     private void saveConversion(){
-        return;
+        // Saving not implemented
     }
 
-    public static double round(double value, int places) {
+    private static double round(double value, int places) {
         if (places < 2) places = 2;
 
         BigDecimal bd = BigDecimal.valueOf(value);
