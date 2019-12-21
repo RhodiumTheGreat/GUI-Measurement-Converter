@@ -59,7 +59,6 @@ public class MainWindowController {
     @FXML
     private ComboBox<Conversion> conversionRightSelectorDouble2 = new ComboBox<>();
 
-
     @FXML
     private TextField conversionLeftTextDouble;
 
@@ -272,19 +271,17 @@ public class MainWindowController {
 
     @FXML
     protected void onLeftDoubleTyped(){
-        runConversionsDouble(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
+        runConversionsDoubleLTR(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
     }
 
     @FXML
     protected void onRightDoubleTyped1(){
-        //runConversionsDouble();
-        return;
+        runConversionsDoubleRTL(conversionLeftSelectorDouble, conversionRightSelectorDouble1, conversionRightSelectorDouble2, conversionLeftTextDouble, conversionRightTextDouble1, conversionRightTextDouble2);
     }
 
     @FXML
     protected void onRightDoubleTyped2(){
-        //runConversionsDouble();
-        return;
+        runConversionsDoubleRTL(conversionLeftSelectorDouble, conversionRightSelectorDouble2, conversionRightSelectorDouble1, conversionLeftTextDouble, conversionRightTextDouble2, conversionRightTextDouble1);
     }
 
     // Run the conversion for the single value conversions
@@ -315,31 +312,30 @@ public class MainWindowController {
         }
     }
 
-    // Run the conversions for the double value conversions.
-    private void runConversionsDouble(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
-        // TODO Figure this shit out
+    // Run the conversions for the double value conversions, from left to right.
+    private void runConversionsDoubleLTR(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
         try{
             if (!conversionLeftText.getText().equals("") && conversionRightSelector1.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
                 double number1 = Double.parseDouble(conversionLeftText.getText());
                 double number2;
                 BigDecimal bd = BigDecimal.valueOf(number1);
 
+                // The way that this conversion works is inefficient due to repeating processes, however it works.
+                // First it converts the left value to the first right value
                 number1 /= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
-                System.out.println(number1);
-                number2 = conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier() % number1;
-                System.out.println(number2);
-
-                number2 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
                 number1 *= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1);
+                // Then it takes the decimal of that result by subtracting the whole number rounded down
+                number2 = number1 - (int) number1;
+                System.out.println(number2);
+                // Then it converts that from the first right value to the second right value
+                number2 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
                 number2 *= conversionRightSelector2.getSelectionModel().getSelectedItem().getMultiplier();
-
-
-
-                //number *= ConversionSelector2.getSelectionModel().getSelectedItem().getMultiplier();
-
+                System.out.println(number2);
+                // The numbers are adequately rounded, with the first being rounded to it's whole
                 number1 = (int) number1;
                 number2 = round(number2, bd.scale());
-
+                // The final converted numbers are displayed.
                 conversionRightText1.setText(Double.toString(number1));
                 conversionRightText2.setText(Double.toString(number2));
             }
@@ -349,7 +345,43 @@ public class MainWindowController {
                 conversionRightText2.setText("");
             }
             if (conversionRightSelector1.getSelectionModel().getSelectedItem() != null || conversionRightSelector1.getSelectionModel().getSelectedItem() != null) {
-                flashConversionArrow();
+                flashConversionArrowDouble();
+            }
+
+        } catch (NumberFormatException e) {
+            conversionLeftText.setText(conversionLeftText.getText().substring(0, conversionLeftText.getText().length()-1));
+            conversionLeftText.positionCaret(conversionLeftText.getText().length());
+        }
+    }
+
+    // Run the conversions for the double value conversions, from left to right.
+    private void runConversionsDoubleRTL(ComboBox<Conversion> conversionLeftSelector, ComboBox<Conversion> conversionRightSelector1, ComboBox<Conversion> conversionRightSelector2, TextField conversionLeftText, TextField conversionRightText1, TextField conversionRightText2){
+        try{
+            if (!conversionLeftText.getText().equals("") && conversionRightSelector1.getSelectionModel().getSelectedItem() != null && conversionRightSelector2.getSelectionModel().getSelectedItem() != null) {
+                double number1 = Double.parseDouble(conversionRightText1.getText());
+                double number2 = Double.parseDouble(conversionRightText2.getText());;
+                BigDecimal bd = BigDecimal.valueOf(number1);
+
+                // NOTE: conversionRightSelector1 and conversionRightTest1 are set to the conversion and text field of the value being edited by the user.
+                // First it converts the two right values from their multipliers
+                number1 /= conversionRightSelector1.getSelectionModel().getSelectedItem().getMultiplier();
+                number2 /= conversionRightSelector2.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1 + " " + number2);
+                // Then it adds the values together and convects that to the left value
+                number1 += number2;
+                number1 *= conversionLeftSelector.getSelectionModel().getSelectedItem().getMultiplier();
+                System.out.println(number1);
+                // The number's adequately rounded
+                number1 = round(number1, bd.scale());
+                // The final converted numbers are displayed.
+                conversionLeftText.setText(Double.toString(number1));
+            }
+
+            else {
+                conversionLeftText.setText("");
+            }
+            if (conversionRightSelector1.getSelectionModel().getSelectedItem() != null || conversionRightSelector1.getSelectionModel().getSelectedItem() != null) {
+                flashConversionArrowDouble();
             }
 
         } catch (NumberFormatException e) {
@@ -368,9 +400,9 @@ public class MainWindowController {
         ft.play();
     }
 
-    private void flashConversionsArrowDouble() {
+    private void flashConversionArrowDouble() {
         conversionArrowDouble.setFill(BLACK);
-        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowSingle, BLACK, GRAY);
+        FillTransition ft = new FillTransition(Duration.millis(500), conversionArrowDouble, BLACK, GRAY);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();
