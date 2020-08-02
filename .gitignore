@@ -1,2 +1,5 @@
 /out
 /test
+.idea/workspace.xml
+.idea/modules.xml
+*.iml
